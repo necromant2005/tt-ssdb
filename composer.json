@@ -1,9 +1,9 @@
 {
-    "name": "necromant2005/tt-memcachedb",
+    "name": "necromant2005/tt-ssdb",
     "type": "library",
-    "description": "Memcachedb cache adapter for ZF2",
-    "keywords": ["memcachedb","zf2"],
-    "homepage": "https://github.com/necromant2005/tt-memcachedb",
+    "description": "SSDB cache adapter for ZF2",
+    "keywords": ["SSDB","zf2"],
+    "homepage": "https://github.com/necromant2005/tt-ssdb",
     "license": "MIT",
     "authors": [
         {
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-0": {
-            "TweeMemcacheDb": "src/"
+            "TweeSSDB": "src/"
         }
     }
 }
