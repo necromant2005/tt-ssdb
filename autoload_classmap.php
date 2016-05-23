@@ -1,5 +1,5 @@
 <?php
 return array(
-    'TweeMemcacheDb\Cache\Storage\Adapter\MemcacheDbOptions' => __DIR__ . '/src/TweeMemcacheDb/Cache/Storage/Adapter/MemcacheDbOptions.php',
-    'TweeMemcacheDb\Cache\Storage\Adapter\MemcacheDb'        => __DIR__ . '/src/TweeMemcacheDb/Cache/Storage/Adapter/MemcacheDb.php',
+    'TweeSSDB\Cache\Storage\Adapter\SSDBOptions' => __DIR__ . '/src/TweeSSDB/Cache/Storage/Adapter/SSDBOptions.php',
+    'TweeSSDB\Cache\Storage\Adapter\SSDB'        => __DIR__ . '/src/TweeSSDB/Cache/Storage/Adapter/SSDB.php',
 );

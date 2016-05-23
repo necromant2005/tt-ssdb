@@ -1,19 +1,19 @@
 <?php
-namespace TweeMemcacheDb\Cache\Storage\Adapter;
+namespace TweeSSDB\Cache\Storage\Adapter;
 use PHPUnit_Framework_TestCase;
 
 
-class MemcacheDbTest extends PHPUnit_Framework_TestCase
+class SSDBTest extends PHPUnit_Framework_TestCase
 {
 
     public function setUp()
     {
         if (!extension_loaded('memcached')) {
-            $this->markTestSkipped("MemcacheDb extension is not loaded");
+            $this->markTestSkipped("SSDB extension is not loaded");
         }
 
-        $this->_options = new MemcacheDbOptions();
-        $this->_storage = new MemcacheDb();
+        $this->_options = new SSDBOptions();
+        $this->_storage = new SSDB();
         $this->_storage->setOptions($this->_options);
         $this->_storage->flush();
 
@@ -22,7 +22,7 @@ class MemcacheDbTest extends PHPUnit_Framework_TestCase
 
     public function testOptionsAddServer()
     {
-        $options = new MemcacheDbOptions();
+        $options = new SSDBOptions();
         $options->addServer('127.0.0.1', 8888);
         $options->addServer('localhost');
         $options->addServer('domain.com', 11215);
@@ -34,7 +34,7 @@ class MemcacheDbTest extends PHPUnit_Framework_TestCase
             array('host' => 'domain.com', 'port' => 11215, 'weight' => 0, 'type' => 'slave'),
         );
         $this->assertEquals($options->getServers(), $servers);
-        $memcached = new MemcacheDb($options);
+        $memcached = new SSDB($options);
         $this->assertEquals($memcached->getOptions()->getServers(), $servers);
     }
 
@@ -90,14 +90,14 @@ class MemcacheDbTest extends PHPUnit_Framework_TestCase
      */
     public function testOptionSetServers($servers, $expectedServers)
     {
-        $options = new MemcacheDbOptions();
+        $options = new SSDBOptions();
         $options->setServers($servers);
         $this->assertEquals($expectedServers, $options->getServers());
     }
 
     public function testLibOptionsSet()
     {
-        $options = new MemcacheDbOptions();
+        $options = new SSDBOptions();
 
         $options->setLibOptions(array(
             'COMPRESSION' => false
@@ -105,7 +105,7 @@ class MemcacheDbTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($options->getLibOption(\Memcached::OPT_COMPRESSION), false);
 
-        $memcached = new MemcacheDb($options);
+        $memcached = new SSDB($options);
         $this->assertEquals($memcached->getOptions()->getLibOptions(), array(
             \Memcached::OPT_COMPRESSION => false
         ));
@@ -113,7 +113,7 @@ class MemcacheDbTest extends PHPUnit_Framework_TestCase
 
     public function testNoOptionsSetsDefaultServer()
     {
-        $memcached = new MemcacheDb();
+        $memcached = new SSDB();
 
         $expected = array(array(
             'host'   => '127.0.0.1',

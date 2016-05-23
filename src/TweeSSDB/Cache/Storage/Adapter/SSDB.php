@@ -1,5 +1,5 @@
 <?php
-namespace TweeMemcacheDb\Cache\Storage\Adapter;
+namespace TweeSSDB\Cache\Storage\Adapter;
 
 use SSDB as SsdbResource;
 use stdClass;
@@ -11,7 +11,7 @@ use Zend\Cache\Storage\FlushableInterface;
 use Zend\Cache\Storage\TotalSpaceCapableInterface;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
-class MemcacheDb extends AbstractAdapter implements
+class SSDB extends AbstractAdapter implements
     AvailableSpaceCapableInterface,
     FlushableInterface,
     TotalSpaceCapableInterface
@@ -40,7 +40,7 @@ class MemcacheDb extends AbstractAdapter implements
     /**
      * Constructor
      *
-     * @param  null|array|Traversable|MemcacheDbOptions $options
+     * @param  null|array|Traversable|SSDBOptions $options
      * @throws Exception\ExceptionInterface
      */
     public function __construct($options = null)
@@ -120,14 +120,14 @@ class MemcacheDb extends AbstractAdapter implements
     /**
      * Set options.
      *
-     * @param  array|Traversable|MemcacheDbOptions $options
+     * @param  array|Traversable|SSDBOptions $options
      * @return Memcached
      * @see    getOptions()
      */
     public function setOptions($options)
     {
-        if (!$options instanceof MemcacheDbOptions) {
-            $options = new MemcacheDbOptions($options);
+        if (!$options instanceof SSDBOptions) {
+            $options = new SSDBOptions($options);
         }
 
         return parent::setOptions($options);
@@ -136,13 +136,13 @@ class MemcacheDb extends AbstractAdapter implements
     /**
      * Get options.
      *
-     * @return MemcacheDbOptions
+     * @return SSDBOptions
      * @see setOptions()
      */
     public function getOptions()
     {
         if (!$this->options) {
-            $this->setOptions(new MemcacheDbOptions());
+            $this->setOptions(new SSDBOptions());
         }
         return $this->options;
     }

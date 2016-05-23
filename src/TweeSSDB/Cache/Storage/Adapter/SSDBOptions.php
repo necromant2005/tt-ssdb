@@ -1,11 +1,11 @@
 <?php
-namespace TweeMemcacheDb\Cache\Storage\Adapter;
+namespace TweeSSDB\Cache\Storage\Adapter;
 
 use SSDB as SsdbResource;
 use Zend\Cache\Exception;
 use Zend\Cache\Storage\Adapter\AdapterOptions;
 
-class MemcacheDbOptions extends AdapterOptions
+class SSDBOptions extends AdapterOptions
 {
     const TYPE_MASTER = 'master';
     const TYPE_SLAVE  = 'slave';
