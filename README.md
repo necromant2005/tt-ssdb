@@ -47,9 +47,9 @@ Each slave receives 2/5 reads.
 use TweeSSDB\Cache\Storage\Adapter;
 
 $options = new SSDBOptions(array(
-    array('host' => '127.0.0.1', 'port' => 21201, 'weight' => 1, 'type' => 'master'),
-    array('host' => '127.0.0.2', 'port' => 21201, 'weight' => 2, 'type' => 'slave'),
-    array('host' => '127.0.0.3', 'port' => 21201, 'weight' => 2, 'type' => 'slave'),
+    array('host' => '127.0.0.1', 'port' => 8888, 'weight' => 1, 'type' => 'master'),
+    array('host' => '127.0.0.2', 'port' => 8888, 'weight' => 2, 'type' => 'slave'),
+    array('host' => '127.0.0.3', 'port' => 8888, 'weight' => 2, 'type' => 'slave'),
 ));
 $adapter = new SSDB($options);
 
@@ -60,9 +60,9 @@ Also it's possible to use multi master write - in this case writes will be distr
 use TweeSSDB\Cache\Storage\Adapter;
 
 $options = new SSDBOptions(array(
-    array('host' => '127.0.0.1', 'port' => 21201, 'weight' => 1, 'type' => 'master'),
-    array('host' => '127.0.0.2', 'port' => 21201, 'weight' => 1, 'type' => 'master'),
-    array('host' => '127.0.0.3', 'port' => 21201, 'weight' => 1, 'type' => 'master'),
+    array('host' => '127.0.0.1', 'port' => 8888, 'weight' => 1, 'type' => 'master'),
+    array('host' => '127.0.0.2', 'port' => 8888, 'weight' => 1, 'type' => 'master'),
+    array('host' => '127.0.0.3', 'port' => 8888, 'weight' => 1, 'type' => 'master'),
 ));
 $adapter = new SSDB($options);
 
