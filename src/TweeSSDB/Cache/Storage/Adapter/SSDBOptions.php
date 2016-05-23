@@ -11,21 +11,21 @@ class SSDBOptions extends AdapterOptions
     const TYPE_SLAVE  = 'slave';
 
     /**
-     * A memcached master resource to share
+     * A SSDB master resource to share
      *
      * @var null|SsdbResource
      */
-    protected $memcachedMasterResource;
+    protected $SSDBMasterResource;
 
     /**
-     * A memcached slave resource to share
+     * A SSDB slave resource to share
      *
      * @var null|SsdbResource
      */
-    protected $memcachedSlaveResource;
+    protected $SSDBSlaveResource;
 
     /**
-     * List of memcached servers to add on initialize
+     * List of SSDB servers to add on initialize
      *
      * @var string
      */
@@ -45,7 +45,7 @@ class SSDBOptions extends AdapterOptions
     );
 
     /**
-     * List of Libmemcached options to set on initialize
+     * List of LibSSDB options to set on initialize
      *
      * @var array
      */
@@ -54,11 +54,11 @@ class SSDBOptions extends AdapterOptions
     /**
      * Set namespace.
      *
-     * The option Memcached::OPT_PREFIX_KEY will be used as the namespace.
+     * The option SSDB::OPT_PREFIX_KEY will be used as the namespace.
      * It can't be longer than 128 characters.
      *
      * @see AdapterOptions::setNamespace()
-     * @see MemcachedOptions::setPrefixKey()
+     * @see SSDBOptions::setPrefixKey()
      */
     public function setNamespace($namespace)
     {
@@ -75,53 +75,53 @@ class SSDBOptions extends AdapterOptions
     }
 
     /**
-     * A memcached master resource to share
+     * A SSDB master resource to share
      *
-     * @param null|SsdbResource $memcachedResource
-     * @return MemcachedOptions
+     * @param null|SsdbResource $SSDBResource
+     * @return SSDBOptions
      */
-    public function setMemcachedMasterResource(SsdbResource $memcachedResource = null)
+    public function setSSDBMasterResource(SsdbResource $SSDBResource = null)
     {
-        if ($this->memcachedMasterResource !== $memcachedResource) {
-            $this->triggerOptionEvent('memcached_resource', $memcachedResource);
-            $this->memcachedMasterResource = $memcachedResource;
+        if ($this->SSDBMasterResource !== $SSDBResource) {
+            $this->triggerOptionEvent('SSDB_resource', $SSDBResource);
+            $this->SSDBMasterResource = $SSDBResource;
         }
         return $this;
     }
 
     /**
-     * A memcached slave resource to share
+     * A SSDB slave resource to share
      *
-     * @param null|SsdbResource $memcachedResource
-     * @return MemcachedOptions
+     * @param null|SsdbResource $SSDBResource
+     * @return SSDBOptions
      */
-    public function setMemcachedSlaveResource(SsdbResource $memcachedResource = null)
+    public function setSSDBSlaveResource(SsdbResource $SSDBResource = null)
     {
-        if ($this->memcachedSlaveResource !== $memcachedResource) {
-            $this->triggerOptionEvent('memcached_resource', $memcachedResource);
-            $this->memcachedSlaveResource = $memcachedResource;
+        if ($this->SSDBSlaveResource !== $SSDBResource) {
+            $this->triggerOptionEvent('SSDB_resource', $SSDBResource);
+            $this->SSDBSlaveResource = $SSDBResource;
         }
         return $this;
     }
 
     /**
-     * Get memcached master resource to share
+     * Get SSDB master resource to share
      *
      * @return null|SsdbResource
      */
-    public function getMemcachedMasterResource()
+    public function getSSDBMasterResource()
     {
-        return $this->memcachedMasterResource;
+        return $this->SSDBMasterResource;
     }
 
     /**
-     * Get memcached slave resource to share
+     * Get SSDB slave resource to share
      *
      * @return null|SsdbResource
      */
-    public function getMemcachedSlaveResource()
+    public function getSSDBSlaveResource()
     {
-        return $this->memcachedSlaveResource;
+        return $this->SSDBSlaveResource;
     }
 
     /**
@@ -130,7 +130,7 @@ class SSDBOptions extends AdapterOptions
      * @param  string $host
      * @param  int $port
      * @param  int $weight
-     * @return MemcachedOptions
+     * @return SSDBOptions
      */
     public function addServer($host, $port = 8888, $weight = 0, $type = self::TYPE_SLAVE)
     {
@@ -154,10 +154,10 @@ class SSDBOptions extends AdapterOptions
     }
 
     /**
-     * Set a list of memcached servers to add on initialize
+     * Set a list of SSDB servers to add on initialize
      *
      * @param string|array $servers list of servers
-     * @return MemcachedOptions
+     * @return SSDBOptions
      * @throws Exception\InvalidArgumentException
      */
     public function setServers($servers)
@@ -275,11 +275,11 @@ class SSDBOptions extends AdapterOptions
     }
 
     /**
-     * Set libmemcached options
+     * Set libSSDB options
      *
      * @param array $libOptions
-     * @return MemcachedOptions
-     * @link http://php.net/manual/memcached.constants.php
+     * @return SSDBOptions
+     * @link http://php.net/manual/SSDB.constants.php
      */
     public function setLibOptions(array $libOptions)
     {
@@ -296,12 +296,12 @@ class SSDBOptions extends AdapterOptions
     }
 
     /**
-     * Set libmemcached option
+     * Set libSSDB option
      *
      * @param string|int $key
      * @param mixed      $value
-     * @return MemcachedOptions
-     * @link http://php.net/manual/memcached.constants.php
+     * @return SSDBOptions
+     * @link http://php.net/manual/SSDB.constants.php
      */
     public function setLibOption($key, $value)
     {
@@ -313,10 +313,10 @@ class SSDBOptions extends AdapterOptions
     }
 
     /**
-     * Get libmemcached options
+     * Get libSSDB options
      *
      * @return array
-     * @link http://php.net/manual/memcached.constants.php
+     * @link http://php.net/manual/SSDB.constants.php
      */
     public function getLibOptions()
     {
@@ -324,11 +324,11 @@ class SSDBOptions extends AdapterOptions
     }
 
     /**
-     * Get libmemcached option
+     * Get libSSDB option
      *
      * @param string|int $key
      * @return mixed
-     * @link http://php.net/manual/memcached.constants.php
+     * @link http://php.net/manual/SSDB.constants.php
      */
     public function getLibOption($key)
     {
@@ -340,7 +340,7 @@ class SSDBOptions extends AdapterOptions
     }
 
     /**
-     * Normalize libmemcached option name into it's constant value
+     * Normalize libSSDB option name into it's constant value
      *
      * @param string|int $key
      * @throws Exception\InvalidArgumentException
@@ -348,9 +348,9 @@ class SSDBOptions extends AdapterOptions
     protected function normalizeLibOptionKey(& $key)
     {
         if (is_string($key)) {
-            $const = 'Memcached::OPT_' . str_replace(array(' ', '-'), '_', strtoupper($key));
+            $const = 'SSDB::OPT_' . str_replace(array(' ', '-'), '_', strtoupper($key));
             if (!defined($const)) {
-                throw new Exception\InvalidArgumentException("Unknown libmemcached option '{$key}' ({$const})");
+                throw new Exception\InvalidArgumentException("Unknown libSSDB option '{$key}' ({$const})");
             }
             $key = constant($const);
         } else {

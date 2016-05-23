@@ -8,7 +8,7 @@ class SSDBTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        if (!extension_loaded('memcached')) {
+        if (!extension_loaded('SSDB')) {
             $this->markTestSkipped("SSDB extension is not loaded");
         }
 
@@ -34,8 +34,8 @@ class SSDBTest extends PHPUnit_Framework_TestCase
             array('host' => 'domain.com', 'port' => 11215, 'weight' => 0, 'type' => 'slave'),
         );
         $this->assertEquals($options->getServers(), $servers);
-        $memcached = new SSDB($options);
-        $this->assertEquals($memcached->getOptions()->getServers(), $servers);
+        $SSDB = new SSDB($options);
+        $this->assertEquals($SSDB->getOptions()->getServers(), $servers);
     }
 
     public function getServersDefinitions()
@@ -103,17 +103,17 @@ class SSDBTest extends PHPUnit_Framework_TestCase
             'COMPRESSION' => false
         ));
 
-        $this->assertEquals($options->getLibOption(\Memcached::OPT_COMPRESSION), false);
+        $this->assertEquals($options->getLibOption(\SSDB::OPT_COMPRESSION), false);
 
-        $memcached = new SSDB($options);
-        $this->assertEquals($memcached->getOptions()->getLibOptions(), array(
-            \Memcached::OPT_COMPRESSION => false
+        $SSDB = new SSDB($options);
+        $this->assertEquals($SSDB->getOptions()->getLibOptions(), array(
+            \SSDB::OPT_COMPRESSION => false
         ));
     }
 
     public function testNoOptionsSetsDefaultServer()
     {
-        $memcached = new SSDB();
+        $SSDB = new SSDB();
 
         $expected = array(array(
             'host'   => '127.0.0.1',
@@ -127,7 +127,7 @@ class SSDBTest extends PHPUnit_Framework_TestCase
             'type' => 'slave',
         ));
 
-        $this->assertEquals($expected, $memcached->getOptions()->getServers());
+        $this->assertEquals($expected, $SSDB->getOptions()->getServers());
     }
 
     public function tearDown()

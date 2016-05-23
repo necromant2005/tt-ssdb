@@ -17,102 +17,82 @@ class SSDB extends AbstractAdapter implements
     TotalSpaceCapableInterface
 {
     /**
-     * Major version of ext/memcached
+     * Major version of ext/SSDB
      *
      * @var null|int
      */
-    protected static $extMemcachedMajorVersion;
+    protected static $extSSDBMajorVersion;
 
     /**
-     * The memcached master resource
+     * The SSDB master resource
      *
      * @var SsdbResource
      */
-    protected $memcachedMasterResource;
+    protected $SSDBMasterResource;
 
     /**
-     * The memcached slave resource
+     * The SSDB slave resource
      *
      * @var SsdbResource
      */
-    protected $memcachedSlaveResource;
+    protected $SSDBSlaveResource;
 
     /**
-     * Constructor
-     *
-     * @param  null|array|Traversable|SSDBOptions $options
-     * @throws Exception\ExceptionInterface
-     */
-    public function __construct($options = null)
-    {
-        if (static::$extMemcachedMajorVersion === null) {
-            $v = (string) phpversion('memcached');
-            static::$extMemcachedMajorVersion = ($v !== '') ? (int)$v[0] : 0;
-        }
-
-        if (static::$extMemcachedMajorVersion < 1) {
-            throw new Exception\ExtensionNotLoadedException('Need ext/memcached version >= 1.0.0');
-        }
-
-        parent::__construct($options);
-    }
-
-    /**
-     * Initialize the internal memcached master resource
+     * Initialize the internal SSDB master resource
      *
      * @return SsdbResource
      */
-    protected function getMemcachedMasterResource()
+    protected function getSSDBMasterResource()
     {
-        if ($this->memcachedMasterResource) {
-            return $this->memcachedMasterResource;
+        if ($this->SSDBMasterResource) {
+            return $this->SSDBMasterResource;
         }
 
         $options = $this->getOptions();
 
         // use a configured resource or a new one
-        $memcached = $options->getMemcachedMasterResource() ?: new SsdbResource();
+        $SSDB = $options->getSSDBMasterResource() ?: new SsdbResource();
 
         // init servers
         $servers = $options->getMasterServers();
         shuffle($servers);
         $server = reset($servers);
-        $memcached->connect($server['host'], $server['port']);
-        $memcached->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
+        $SSDB->connect($server['host'], $server['port']);
+        $SSDB->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
 
         // use the initialized resource
-        $this->memcachedMasterResource = $memcached;
+        $this->SSDBMasterResource = $SSDB;
 
-        return $this->memcachedMasterResource;
+        return $this->SSDBMasterResource;
     }
 
     /**
-     * Initialize the internal memcached slave resource
+     * Initialize the internal SSDB slave resource
      *
      * @return SsdbResource
      */
-    protected function getMemcachedSlaveResource()
+    protected function getSSDBSlaveResource()
     {
-        if ($this->memcachedSlaveResource) {
-            return $this->memcachedSlaveResource;
+        if ($this->SSDBSlaveResource) {
+            return $this->SSDBSlaveResource;
         }
 
         $options = $this->getOptions();
 
         // use a configured resource or a new one
-        $memcached = $options->getMemcachedSlaveResource() ?: new SsdbResource();
+        $SSDB = $options->getSSDBSlaveResource() ?: new SsdbResource();
 
         // init servers
         $servers = $options->getSlaveServers();
         shuffle($servers);
         $server = reset($servers);
-        $memcached->connect($server['host'], $server['port']);
-        $memcached->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
+        $SSDB->connect($server['host'], $server['port']);
+        $SSDB->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
 
         // use the initialized resource
-        $this->memcachedSlaveResource = $memcached;
+        $this->SSDBSlaveResource = $SSDB;
 
-        return $this->memcachedSlaveResource;
+        return $this->SSDBSlaveResource;
     }
 
     /* options */
@@ -121,7 +101,7 @@ class SSDB extends AbstractAdapter implements
      * Set options.
      *
      * @param  array|Traversable|SSDBOptions $options
-     * @return Memcached
+     * @return SSDB
      * @see    getOptions()
      */
     public function setOptions($options)
@@ -168,7 +148,7 @@ class SSDB extends AbstractAdapter implements
      */
     public function getTotalSpace()
     {
-        $memc  = $this->getMemcachedMasterResource();
+        $memc  = $this->getSSDBMasterResource();
         return $memc->getStats();
         if ($stats === false) {
             throw new Exception\RuntimeException($memc->getResultMessage());
@@ -187,7 +167,7 @@ class SSDB extends AbstractAdapter implements
      */
     public function getAvailableSpace()
     {
-        $memc  = $this->getMemcachedMasterResource();
+        $memc  = $this->getSSDBMasterResource();
         $stats = $memc->getStats();
         if ($stats === false) {
             throw new Exception\RuntimeException($memc->getResultMessage());
@@ -210,7 +190,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalGetItem(& $normalizedKey, & $success = null, & $casToken = null)
     {
-        $memc = $this->getMemcachedSlaveResource();
+        $memc = $this->getSSDBSlaveResource();
         return $memc->get($normalizedKey);
     }
 
@@ -223,7 +203,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalGetItems(array & $normalizedKeys)
     {
-        $memc   = $this->getMemcachedSlaveResource();
+        $memc   = $this->getSSDBSlaveResource();
         return $memc->multi_get($normalizedKeys);
     }
 
@@ -236,7 +216,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalHasItem(& $normalizedKey)
     {
-        $memc  = $this->getMemcachedSlaveResource();
+        $memc  = $this->getSSDBSlaveResource();
         return $memc->exists($normalizedKey);
     }
 
@@ -249,7 +229,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalHasItems(array & $normalizedKeys)
     {
-        $memc   = $this->getMemcachedSlaveResource();
+        $memc   = $this->getSSDBSlaveResource();
         $map = array();
         foreach ($normalizedKeys as $key) {
             $map[$key] = $memc->exists($key);
@@ -266,7 +246,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalGetMetadatas(array & $normalizedKeys)
     {
-        $memc   = $this->getMemcachedSlaveResource();
+        $memc   = $this->getSSDBSlaveResource();
         return $memc->multi_get($normalizedKeys);
     }
 
@@ -282,7 +262,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalSetItem(& $normalizedKey, & $value)
     {
-        $memc = $this->getMemcachedMasterResource();
+        $memc = $this->getSSDBMasterResource();
         return $memc->set($normalizedKey, $value);
     }
 
@@ -295,7 +275,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalSetItems(array & $normalizedKeyValuePairs)
     {
-        $memc = $this->getMemcachedMasterResource();
+        $memc = $this->getSSDBMasterResource();
         return $memc->multi_set($normalizedKeyValuePairs);
     }
 
@@ -309,7 +289,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalAddItem(& $normalizedKey, & $value)
     {
-        $memc = $this->getMemcachedMasterResource();
+        $memc = $this->getSSDBMasterResource();
         return $memc->incr($normalizedKey, $value);
     }
 
@@ -323,7 +303,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalReplaceItem(& $normalizedKey, & $value)
     {
-        $memc = $this->getMemcachedMasterResource();
+        $memc = $this->getSSDBMasterResource();
         return $memc->getset($normalizedKey, $value);
     }
 
@@ -340,7 +320,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalCheckAndSetItem(& $token, & $normalizedKey, & $value)
     {
-        $memc       = $this->getMemcachedMasterResource();
+        $memc       = $this->getSSDBMasterResource();
         return $memc->getset($token, $normalizedKey, $value);
     }
 
@@ -353,7 +333,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalRemoveItem(& $normalizedKey)
     {
-        $memc = $this->getMemcachedMasterResource();
+        $memc = $this->getSSDBMasterResource();
         return $memc->del($normalizedKey);
     }
 
@@ -366,7 +346,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalRemoveItems(array & $normalizedKeys)
     {
-        $memc = $this->getMemcachedMasterResource();
+        $memc = $this->getSSDBMasterResource();
         return $memc->multi_del($normalizedKeys);
     }
 
@@ -380,7 +360,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalIncrementItem(& $normalizedKey, & $value)
     {
-        $memc     = $this->getMemcachedMasterResource();
+        $memc     = $this->getSSDBMasterResource();
         $value    = (int) $value;
         return $memc->incr($normalizedKey, $value);
     }
@@ -395,7 +375,7 @@ class SSDB extends AbstractAdapter implements
      */
     protected function internalDecrementItem(& $normalizedKey, & $value)
     {
-        $memc     = $this->getMemcachedMasterResource();
+        $memc     = $this->getSSDBMasterResource();
         $value    = (int)$value * -1;
         return $memc->incr($normalizedKey, $value);
     }
