@@ -57,8 +57,12 @@ class SSDB extends AbstractAdapter implements
         $servers = $options->getMasterServers();
         shuffle($servers);
         $server = reset($servers);
-        $SSDB->connect($server['host'], $server['port']);
-        $SSDB->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
+        try {
+            $SSDB->connect($server['host'], $server['port']);
+            $SSDB->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Server ' . $server['host'] . ':' . $server['port'] . ' out of order', 100, $e);
+        }
 
         // use the initialized resource
         $this->SSDBMasterResource = $SSDB;
