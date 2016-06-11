@@ -88,15 +88,31 @@ class SSDB extends AbstractAdapter implements
 
         // init servers
         $servers = $options->getSlaveServers();
-        shuffle($servers);
-        $server = reset($servers);
 
-        try {
-            $SSDB->connect($server['host'], $server['port']);
-            $SSDB->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Server ' . $server['host'] . ':' . $server['port'] . ' out of order', 100, $e);
-        }
+        // shuffle($servers);
+        // $server = reset($servers);
+        // try {
+        //     $SSDB->connect($server['host'], $server['port']);
+        //     $SSDB->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
+        // } catch (\Exception $e) {
+        //     throw new \RuntimeException('Server ' . $server['host'] . ':' . $server['port'] . ' out of order', 100, $e);
+        // }
+
+
+        do {
+            shuffle($servers);
+            $server = array_shift($servers);
+            try {
+                $SSDB->connect($server['host'], $server['port'], 1);
+                $SSDB->option(SsdbResource::OPT_READ_TIMEOUT, 5);
+                $SSDB->option(SsdbResource::OPT_SERIALIZER, SsdbResource::SERIALIZER_PHP);
+                break;
+            } catch (\Exception $e) {
+                if (!count($servers)) {
+                    throw new \RuntimeException('Server ' . $server['host'] . ':' . $server['port'] . ' out of order', 100, $e);
+                }
+            }
+        } while (count($servers));
 
         // use the initialized resource
         $this->SSDBSlaveResource = $SSDB;
